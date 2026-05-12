@@ -1,313 +1,447 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AgentCommit — Git for AI Agents</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>agentcommit — Automate AI accountability</title>
+<meta name="description" content="Automate AI accountability. Built for Data scientists and engineers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --coral: #cc785c;
+  --coral-active: #a9583e;
+  --ink: #141413;
+  --body: #3d3d3a;
+  --body-strong: #252523;
+  --muted: #6c6a64;
+  --muted-soft: #8e8b82;
+  --hairline: #e6dfd8;
+  --canvas: #faf9f5;
+  --surface-card: #efe9de;
+  --surface-cream-strong: #e8e0d2;
+  --surface-dark: #181715;
+  --surface-dark-elevated: #252320;
+  --surface-dark-soft: #1f1e1b;
+  --on-dark: #faf9f5;
+  --on-dark-soft: #a09d96;
+  --accent-teal: #5db8a6;
+  --accent-amber: #e8a55a;
+}
 
-    * { font-family: 'Inter', sans-serif; }
-    .mono { font-family: 'JetBrains Mono', monospace; }
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-    .gradient-bg {
-      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(99,102,241,0.35) 0%, transparent 70%),
-                  radial-gradient(ellipse 60% 40% at 80% 50%, rgba(168,85,247,0.15) 0%, transparent 60%),
-                  #060610;
-    }
+html { scroll-behavior: smooth; }
 
-    .card-glow {
-      background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
-      border: 1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(12px);
-    }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.55;
+  color: var(--body);
+  background: var(--canvas);
+  -webkit-font-smoothing: antialiased;
+}
 
-    .card-glow:hover {
-      border-color: rgba(99,102,241,0.4);
-      box-shadow: 0 0 30px rgba(99,102,241,0.1);
-    }
+/* ── Typography ──────────────────────────────── */
+.display-lg {
+  font-family: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  font-size: clamp(36px, 5vw, 48px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  color: var(--ink);
+}
+.display-sm {
+  font-family: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+  font-size: clamp(24px, 3.5vw, 28px);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+  color: var(--ink);
+}
+.title-lg { font-size:22px; font-weight:500; line-height:1.3; color:var(--ink); }
+.title-md { font-size:18px; font-weight:500; line-height:1.4; color:var(--ink); }
+.body-md  { font-size:16px; line-height:1.55; color:var(--body); }
+.body-sm  { font-size:14px; line-height:1.55; color:var(--muted); }
+.caption  { font-size:12px; font-weight:500; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
 
-    .pricing-card-pro {
-      background: linear-gradient(135deg, rgba(99,102,241,0.2) 0%, rgba(168,85,247,0.15) 100%);
-      border: 1px solid rgba(99,102,241,0.5);
-      box-shadow: 0 0 40px rgba(99,102,241,0.15);
-    }
+/* ── Layout ──────────────────────────────────── */
+.section { padding: 96px 24px; }
+.section-sm { padding: 64px 24px; }
+.container { max-width: 1100px; margin: 0 auto; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
+.grid-3 { display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; }
 
-    .hero-glow {
-      text-shadow: 0 0 80px rgba(99,102,241,0.4);
-    }
+/* ── Navigation ──────────────────────────────── */
+.top-nav {
+  position: sticky; top:0; z-index:100;
+  background: var(--canvas);
+  border-bottom: 1px solid var(--hairline);
+  height: 64px; display:flex; align-items:center;
+}
+.top-nav .container {
+  display:flex; justify-content:space-between; align-items:center;
+  width:100%; max-width:1100px; margin:0 auto; padding:0 24px;
+}
+.nav-brand {
+  display:flex; align-items:center; gap:8px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 500; color: var(--ink);
+  text-decoration: none;
+}
+.nav-brand-icon {
+  width: 32px; height: 32px;
+  background: var(--coral); border-radius: 8px;
+  display:flex; align-items:center; justify-content:center;
+  color: #fff; font-weight:600; font-size:14px;
+}
+.nav-cta {
+  background: var(--coral); color: #fff;
+  font-size: 14px; font-weight: 500;
+  padding: 10px 20px; border-radius: 8px;
+  text-decoration: none; line-height: 1;
+  transition: background 0.2s;
+}
+.nav-cta:hover { background: var(--coral-active); }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-      transition: all 0.2s ease;
-    }
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 30px rgba(99,102,241,0.4);
-    }
-    .btn-primary:active {
-      transform: translateY(0);
-    }
+/* ── Buttons ─────────────────────────────────── */
+.btn-primary {
+  display:inline-block;
+  background: var(--coral); color: #fff;
+  font-size: 14px; font-weight: 500;
+  padding: 12px 24px; border-radius: 8px;
+  text-decoration: none; line-height: 1;
+  transition: background 0.2s; border:none; cursor:pointer;
+}
+.btn-primary:hover { background: var(--coral-active); }
+.btn-secondary {
+  display:inline-block;
+  background: transparent; color: var(--ink);
+  font-size: 14px; font-weight: 500;
+  padding: 12px 24px; border-radius: 8px;
+  text-decoration: none; line-height: 1;
+  border: 1px solid var(--hairline);
+  transition: border-color 0.2s;
+}
+.btn-secondary:hover { border-color: var(--muted-soft); }
 
-    .code-block {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
+/* ── Hero ────────────────────────────────────── */
+.hero-band {
+  background: var(--canvas);
+  padding: 80px 24px 64px;
+  text-align: center;
+}
+.hero-badge {
+  display:inline-block;
+  background: var(--surface-card); color: var(--ink);
+  font-size: 12px; font-weight: 500; letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 12px; border-radius: 9999px;
+  margin-bottom: 24px;
+}
+.hero-band h1 { margin-bottom: 20px; }
+.hero-sub {
+  font-size: 18px; color: var(--body);
+  max-width: 520px; margin: 0 auto 36px;
+  line-height: 1.6;
+}
+.hero-actions { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.hero-mockup {
+  max-width: 720px; margin: 48px auto 0;
+  background: var(--surface-dark);
+  border-radius: 16px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-mockup-dots {
+  display:flex; gap:6px; margin-bottom: 20px;
+}
+.hero-mockup-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--on-dark-soft); opacity: 0.4;
+}
+.hero-mockup-code {
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 13px; color: var(--on-dark-soft);
+  line-height: 1.8;
+}
+.hero-mockup-highlight {
+  color: var(--accent-teal);
+}
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-    @keyframes pulse-slow {
-      0%, 100% { opacity: 0.6; }
-      50%       { opacity: 1; }
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-12px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
+/* ── Problem (Before/After) ──────────────────── */
+.problem-band { background: var(--canvas); }
+.problem-old, .problem-new {
+  padding: 32px;
+  border-radius: 12px;
+}
+.problem-old {
+  background: var(--surface-card);
+  border-left: 3px solid var(--muted-soft);
+}
+.problem-new {
+  background: var(--canvas);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--accent-teal);
+}
+.problem-label {
+  font-size: 12px; font-weight: 500; letter-spacing: 1.5px;
+  text-transform: uppercase; margin-bottom: 12px;
+}
+.problem-label.old { color: var(--muted); }
+.problem-label.new { color: var(--accent-teal); }
 
-    .animate-fade-up        { animation: fadeUp 0.7s ease forwards; }
-    .animate-fade-up-delay1 { animation: fadeUp 0.7s ease 0.15s forwards; opacity: 0; }
-    .animate-fade-up-delay2 { animation: fadeUp 0.7s ease 0.3s forwards; opacity: 0; }
-    .animate-fade-up-delay3 { animation: fadeUp 0.7s ease 0.45s forwards; opacity: 0; }
-    .animate-fade-up-delay4 { animation: fadeUp 0.7s ease 0.6s forwards; opacity: 0; }
-    .animate-fade-in        { animation: fadeIn 1s ease 0.2s forwards; opacity: 0; }
-    .animate-pulse-slow     { animation: pulse-slow 3s ease-in-out infinite; }
+/* ── Feature Cards ───────────────────────────── */
+.features-band { background: var(--canvas); }
+.features-header {
+  text-align: center; margin-bottom: 48px;
+}
+.features-header h2 { margin-bottom: 12px; }
+.features-header p { max-width: 480px; margin: 0 auto; }
 
-    .feature-card:hover .feature-icon {
-      transform: scale(1.1);
-      transition: transform 0.2s ease;
-    }
+.feat-card {
+  background: var(--surface-card);
+  border-radius: 12px;
+  padding: 32px;
+  transition: transform 0.2s;
+}
+.feat-card:hover { transform: translateY(-2px); }
+.feat-icon {
+  width: 48px; height: 48px;
+  border-radius: 10px; margin-bottom: 20px;
+  display:flex; align-items:center; justify-content:center;
+  font-size: 22px;
+}
+.feat-icon.coral { background: rgba(204,120,92,0.12); }
+.feat-icon.dark  { background: rgba(24,23,21,0.06); }
+.feat-card h3 { margin-bottom: 8px; }
+.feat-card p  { font-size: 15px; color: var(--body); line-height: 1.6; }
 
-    .gradient-text {
-      background: linear-gradient(135deg, #a5b4fc 0%, #c084fc 50%, #818cf8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+/* ── Waitlist CTA ────────────────────────────── */
+.cta-band {
+  background: var(--coral);
+  padding: 64px 24px;
+  text-align: center;
+  border-radius: 12px;
+  margin: 0 24px 96px;
+}
+.cta-band h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px; font-weight: 400;
+  line-height: 1.2; letter-spacing: -0.5px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+.cta-band p  { font-size: 16px; color: rgba(255,255,255,0.8); margin-bottom: 32px; }
+.cta-form {
+  display:flex; gap:8px; max-width: 420px; margin:0 auto;
+}
+.cta-form input {
+  flex:1; padding: 12px 16px;
+  border: none; border-radius: 8px;
+  font-size: 15px; font-family: 'Inter', sans-serif;
+  background: #fff; color: var(--ink);
+  outline: none;
+}
+.cta-form input:focus { box-shadow: 0 0 0 3px rgba(255,255,255,0.3); }
+.cta-form button {
+  background: var(--surface-dark); color: #fff;
+  border: none; border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 14px; font-weight: 500; font-family: 'Inter', sans-serif;
+  cursor: pointer; white-space: nowrap;
+  transition: background 0.2s;
+}
+.cta-form button:hover { background: var(--surface-dark-elevated); }
+.cta-form button:disabled { opacity:0.6; cursor:default; }
+.cta-success {
+  display:none; color:#fff; margin-top:16px;
+  font-size:15px; font-weight:500;
+}
 
-    .blame-line { animation: slideIn 0.5s ease forwards; opacity: 0; }
-    .blame-line:nth-child(1) { animation-delay: 0.1s; }
-    .blame-line:nth-child(2) { animation-delay: 0.25s; }
-    .blame-line:nth-child(3) { animation-delay: 0.4s; }
-    .blame-line:nth-child(4) { animation-delay: 0.55s; }
+/* ── Footer ──────────────────────────────────── */
+.footer-band {
+  background: var(--surface-dark);
+  padding: 64px 24px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; color: var(--on-dark);
+  margin-bottom: 8px;
+}
+.footer-tagline { color: var(--on-dark-soft); font-size: 14px; margin-bottom: 24px; }
+.footer-links {
+  display:flex; gap:32px; justify-content:center; flex-wrap:wrap;
+  margin-bottom: 32px;
+}
+.footer-links a { color: var(--on-dark-soft); text-decoration:none; font-size:14px; }
+.footer-links a:hover { color: var(--on-dark); }
+.footer-copy { color: var(--on-dark-soft); font-size: 12px; }
 
-    .tag-badge {
-      background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(168,85,247,0.2));
-      border: 1px solid rgba(99,102,241,0.3);
-    }
-
-    .nav-blur {
-      background: rgba(6,6,16,0.8);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-
-    input:focus {
-      outline: none;
-      border-color: rgba(99,102,241,0.6) !important;
-      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
-    }
-
-    .check-icon { color: #a5b4fc; }
-
-    .tier-free  { border-color: rgba(255,255,255,0.1); }
-    .tier-team  { border-color: rgba(255,255,255,0.1); }
-  </style>
+/* ── Responsive ──────────────────────────────── */
+@media (max-width: 768px) {
+  .section, .section-sm { padding: 64px 20px; }
+  .grid-2 { grid-template-columns:1fr; gap:32px; }
+  .grid-3 { grid-template-columns:1fr; gap:16px; }
+  .hero-band { padding: 48px 20px 40px; }
+  .hero-mockup { margin-top: 32px; padding: 20px; }
+  .cta-band { margin: 0 20px 64px; padding: 48px 20px; }
+  .cta-form { flex-direction:column; }
+  .display-lg { font-size: 32px; }
+}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="gradient-bg text-white min-h-screen">
+<body>
 
-  <!-- NAV -->
-  <nav class="nav-blur fixed top-0 left-0 right-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-      <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-lg btn-primary flex items-center justify-center flex-shrink-0">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
-            <circle cx="12" cy="12" r="3"/><circle cx="6" cy="6" r="2"/><circle cx="18" cy="6" r="2"/>
-            <circle cx="6" cy="18" r="2"/><line x1="8" y1="7" x2="10" y2="10"/><line x1="16" y1="7" x2="14" y2="10"/>
-            <line x1="8" y1="17" x2="10" y2="14"/>
-          </svg>
-        </div>
-        <span class="font-bold text-lg tracking-tight">agentcommit</span>
-      </div>
-      <div class="hidden md:flex items-center gap-8 text-sm text-gray-400">
-        <a href="#features" class="hover:text-white transition-colors">Features</a>
-        <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
-        <a href="#waitlist" class="hover:text-white transition-colors">Early Access</a>
-      </div>
-      <a href="#waitlist" class="btn-primary text-sm font-semibold px-4 py-2 rounded-lg text-white">
-        Get Early Access
-      </a>
+<!-- NAV -->
+<nav class="top-nav">
+  <div class="container">
+    <a href="/" class="nav-brand">
+      <span class="nav-brand-icon">E</span>
+      Eptus
+    </a>
+    <a href="#waitlist" class="nav-cta">Join waitlist</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-band">
+  <div class="container">
+    <span class="hero-badge">Launching soon</span>
+    <h1 class="display-lg">agentcommit</h1>
+    <p class="hero-sub">Automate AI accountability. Built for Data scientists and engineers.</p>
+    <div class="hero-actions">
+      <a href="#waitlist" class="btn-primary">Start rolling now</a>
+      <a href="#features" class="btn-secondary">Learn more</a>
     </div>
-  </nav>
-
-  <!-- HERO -->
-  <section class="pt-32 pb-20 px-4 sm:px-6 text-center relative overflow-hidden">
-    <!-- Background grid -->
-    <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px); background-size: 60px 60px;"></div>
-
-    <div class="max-w-4xl mx-auto relative">
-      <div class="animate-fade-up mb-6 flex justify-center">
-        <span class="tag-badge text-xs mono font-medium px-4 py-1.5 rounded-full text-indigo-300">
-          🚀 Now in Early Access — Join 340+ AI-native devs
-        </span>
-      </div>
-
-      <h1 class="animate-fade-up-delay1 text-4xl sm:text-5xl md:text-6xl font-black leading-[1.1] tracking-tight mb-6 hero-glow">
-        Never lose track of<br/>
-        <span class="gradient-text">what your AI agent did</span><br/>
-        — or why
-      </h1>
-
-      <p class="animate-fade-up-delay2 text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
-        AgentCommit gives you Git-style version control for AI coding sessions: commit history, line-by-line blame, and one-command rollback across <span class="text-gray-300 font-medium">Claude Code</span>, <span class="text-gray-300 font-medium">Cursor</span>, and <span class="text-gray-300 font-medium">Copilot Workspace</span>.
-      </p>
-
-      <div class="animate-fade-up-delay3 flex flex-col sm:flex-row gap-3 justify-center items-center mb-10">
-        <a href="#waitlist" class="btn-primary font-bold px-8 py-4 rounded-xl text-base w-full sm:w-auto text-center">
-          Install the CLI — it's free
-        </a>
-        <a href="#features" class="text-gray-400 hover:text-white border border-white/10 hover:border-white/20 px-8 py-4 rounded-xl text-base transition-all w-full sm:w-auto text-center">
-          See how it works →
-        </a>
-      </div>
-
-      <!-- Terminal mockup -->
-      <div class="animate-fade-up-delay4 max-w-2xl mx-auto code-block rounded-xl overflow-hidden text-left">
-        <div class="flex items-center gap-2 px-4 py-3 border-b border-white/5">
-          <div class="w-3 h-3 rounded-full bg-red-500/70"></div>
-          <div class="w-3 h-3 rounded-full bg-yellow-500/70"></div>
-          <div class="w-3 h-3 rounded-full bg-green-500/70"></div>
-          <span class="ml-2 text-xs text-gray-600 mono">~ terminal</span>
-        </div>
-        <div class="p-5 space-y-2 mono text-sm">
-          <div class="blame-line"><span class="text-gray-600">$ </span><span class="text-indigo-400">npm install -g agentcommit</span></div>
-          <div class="blame-line"><span class="text-gray-500">✓ AgentCommit CLI v1.2.0 installed</span></div>
-          <div class="blame-line"><span class="text-gray-600">$ </span><span class="text-purple-400">agentcommit log</span></div>
-          <div class="blame-line space-y-1">
-            <div><span class="text-green-400">a3f9c12</span> <span class="text-gray-400">[claude-code]</span> <span class="text-white">Refactored auth middleware</span> <span class="text-gray-600">2m ago</span></div>
-            <div><span class="text-yellow-400">b7e2d41</span> <span class="text-gray-400">[cursor]</span>     <span class="text-white">Added rate limiting logic</span>  <span class="text-gray-600">1h ago</span></div>
-          </div>
-        </div>
+    <div class="hero-mockup">
+      <div class="hero-mockup-dots"><span class="hero-mockup-dot"></span><span class="hero-mockup-dot"></span><span class="hero-mockup-dot"></span></div>
+      <div class="hero-mockup-code">
+        <span class="hero-mockup-highlight">$</span> agentcommit init<br>
+        <span style="color:var(--accent-amber)">→</span> Setting up agentcommit...<br>
+        <span style="color:var(--accent-teal))">✓</span> Ready in 60 seconds. <span class="hero-mockup-highlight">Join waitlist →</span>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FEATURES -->
-  <section id="features" class="py-24 px-4 sm:px-6">
-    <div class="max-w-6xl mx-auto">
-      <div class="text-center mb-16">
-        <p class="text-indigo-400 mono text-sm font-medium mb-3">// what you get</p>
-        <h2 class="text-3xl sm:text-4xl font-black tracking-tight">Everything Git never gave you<br/><span class="gradient-text">for AI-generated code</span></h2>
+<!-- PROBLEM -->
+<section class="section-sm problem-band">
+  <div class="container">
+    <div class="grid-2">
+      <div class="problem-old">
+        <p class="problem-label old">The old way</p>
+        <p class="body-md" style="color:var(--body)">AI-generated changes are hard to track and revert</p>
       </div>
-
-      <div class="grid md:grid-cols-3 gap-6">
-
-        <!-- Feature 1 -->
-        <div class="feature-card card-glow rounded-2xl p-8 transition-all duration-300">
-          <div class="feature-icon w-14 h-14 rounded-xl mb-6 flex items-center justify-center transition-transform duration-200" style="background: linear-gradient(135deg, rgba(99,102,241,0.3), rgba(99,102,241,0.1)); border: 1px solid rgba(99,102,241,0.3);">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a5b4fc" stroke-width="2">
-              <circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/>
-              <line x1="4.22" y1="4.22" x2="7.05" y2="7.05"/><line x1="16.95" y1="16.95" x2="19.78" y2="19.78"/>
-              <line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/>
-            </svg>
-          </div>
-          <h3 class="text-xl font-bold mb-3">Agent Commits</h3>
-          <p class="text-gray-400 leading-relaxed text-sm mb-6">Every AI coding session becomes a structured commit — file diffs, agent reasoning, timestamps, and outcomes captured automatically with zero config changes to your workflow.</p>
-          <div class="code-block rounded-lg p-3 mono text-xs space-y-1">
-            <div><span class="text-green-400">+</span> <span class="text-gray-300">commit a3f9c12</span></div>
-            <div class="text-gray-500">  agent: claude-code</div>
-            <div class="text-gray-500">  prompt: "refactor auth..."</div>
-            <div class="text-gray-500">  files: 4 changed, +82 -21</div>
-          </div>
-        </div>
-
-        <!-- Feature 2 -->
-        <div class="feature-card card-glow rounded-2xl p-8 transition-all duration-300">
-          <div class="feature-icon w-14 h-14 rounded-xl mb-6 flex items-center justify-center transition-transform duration-200" style="background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(168,85,247,0.1)); border: 1px solid rgba(168,85,247,0.3);">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="2">
-              <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/>
-            </svg>
-          </div>
-          <h3 class="text-xl font-bold mb-3">Blame Any Line</h3>
-          <p class="text-gray-400 leading-relaxed text-sm mb-6">See exactly which agent session last touched each line of code and the prompt that caused it — like <span class="text-purple-400 mono">git blame</span> but for AI-generated changes.</p>
-          <div class="code-block rounded-lg p-3 mono text-xs space-y-1 overflow-hidden">
-            <div><span class="text-purple-400">b7e2d41</span> <span class="text-blue-400">42</span> <span class="text-gray-300">const limit = rateLimit(</span></div>
-            <div><span class="text-purple-400">b7e2d41</span> <span class="text-blue-400">43</span> <span class="text-gray-300">  windowMs: 15 * 60000</span></div>
-            <div class="text-gray-600 text-xs mt-1">↑ cursor · "add rate limiting"</div>
-          </div>
-        </div>
-
-        <!-- Feature 3 -->
-        <div class="feature-card card-glow rounded-2xl p-8 transition-all duration-300">
-          <div class="feature-icon w-14 h-14 rounded-xl mb-6 flex items-center justify-center transition-transform duration-200" style="background: linear-gradient(135deg, rgba(34,197,94,0.2), rgba(34,197,94,0.05)); border: 1px solid rgba(34,197,94,0.3);">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2">
-              <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.62"/>
-            </svg>
-          </div>
-          <h3 class="text-xl font-bold mb-3">One-Command Rollback</h3>
-          <p class="text-gray-400 leading-relaxed text-sm mb-6">Run <span class="text-green-400 mono">agentcommit checkout &lt;hash&gt;</span> to instantly restore your codebase to any agent session checkpoint, with a full diff of what you're reverting.</p>
-          <div class="code-block rounded-lg p-3 mono text-xs space-y-1">
-            <div><span class="text-gray-600">$ </span><span class="text-green-400">agentcommit checkout a3f9c12</span></div>
-            <div class="text-gray-500">↩ Reverting 4 files...</div>
-            <div class="text-green-400">✓ Restored to a3f9c12</div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Social proof strip -->
-      <div class="mt-16 flex flex-wrap justify-center gap-8 items-center">
-        <div class="text-center">
-          <div class="text-3xl font-black gradient-text">340+</div>
-          <div class="text-xs text-gray-500 mt-1">Early access devs</div>
-        </div>
-        <div class="w-px h-10 bg-white/10 hidden sm:block"></div>
-        <div class="text-center">
-          <div class="text-3xl font-black gradient-text">3</div>
-          <div class="text-xs text-gray-500 mt-1">Agents supported</div>
-        </div>
-        <div class="w-px h-10 bg-white/10 hidden sm:block"></div>
-        <div class="text-center">
-          <div class="text-3xl font-black gradient-text">0</div>
-          <div class="text-xs text-gray-500 mt-1">Config changes needed</div>
-        </div>
-        <div class="w-px h-10 bg-white/10 hidden sm:block"></div>
-        <div class="flex items-center gap-3">
-          <div class="flex -space-x-2">
-            <div class="w-8 h-8 rounded-full bg-indigo-500 border-2 border-black flex items-center justify-center text-xs font-bold">A</div>
-            <div class="w-8 h-8 rounded-full bg-purple-500 border-2 border-black flex items-center justify-center text-xs font-bold">K</div>
-            <div class="w-8 h-8 rounded-full bg-blue-500 border-2 border-black flex items-center justify-center text-xs font-bold">M</div>
-            <div class="w-8 h-8 rounded-full bg-pink-500 border-2 border-black flex items-center justify-center text-xs font-bold">+</div>
-          </div>
-          <span class="text-sm text-gray-400">Join 340+ AI-native devs on the early access list</span>
-        </div>
+      <div class="problem-new">
+        <p class="problem-label new">With agentcommit</p>
+        <p class="body-md" style="color:var(--body-strong)">Agentcommit streamlines AI accountability</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- PRICING -->
-  <section id="pricing" class="py-24 px-4 sm:px-6">
-    <div class="max-w-6xl mx-auto">
-      <div class="text-center mb-16">
-        <p class="text-indigo-400 mono text-sm font-medium mb-3">// simple pricing</p>
-        <h2 class="text-3xl sm:text-4xl font-black tracking-tight">Start free.<br/><span class="gradient-text">Scale when you need to.</span></h2>
+<!-- FEATURES -->
+<section class="section features-band" id="features">
+  <div class="container">
+    <div class="features-header">
+      <h2 class="display-sm">Why agentcommit</h2>
+      <p class="body-md">Everything you need, nothing you don't.</p>
+    </div>
+    <div class="grid-3">
+      <div class="feat-card">
+        <div class="feat-icon coral">&#9670;</div>
+        <h3>Structured commit history for AI agents</h3>
+        <p>Purpose-built from the ground up to deliver results without the overhead of traditional solutions.</p>
       </div>
+      <div class="feat-card">
+        <div class="feat-icon dark">&#9671;</div>
+        <h3>Blame any line in code automatically</h3>
+        <p>Designed with clarity in mind. Get insights at a glance, take action in seconds&mdash;no training required.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon coral">&#9670;</div>
+        <h3>Instant rollback with detailed diffs</h3>
+        <p>Plugs into your existing workflow. Start seeing value from day one, not month three.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-      <div class="grid md:grid-cols-3 gap-6 items-start">
+<!-- WAITLIST CTA -->
+<section class="cta-band" id="waitlist">
+  <h2>Be the first to try agentcommit</h2>
+  <p>Join early adopters on the waitlist. We'll reach out when we launch.</p>
+  <form class="cta-form" id="waitlist-form">
+    <input type="email" id="email-input" placeholder="Your email address" required>
+    <button type="submit" id="submit-btn">Get early access</button>
+  </form>
+  <p class="cta-success" id="cta-success">You're on the list &#10003;</p>
+</section>
 
-        <!-- Solo Free -->
-        <div class="card-glow tier-free rounded-2xl p-8 transition-all duration-300 hover:border-white/20">
-          <div class="mb-6">
-            <h3 class="text-lg font-bold mb-1">Solo</h3>
-            <div class="flex items-baseline gap-1">
-              <span class="text-4xl font-black">$0</span>
-              <span class="text-gray-500 text-sm">/month</span>
-            </div>
-            <p class="text-gray-500 text-sm mt
+<!-- FOOTER -->
+<footer class="footer-band">
+  <div class="footer-brand">Eptus Studio</div>
+  <p class="footer-tagline">Where ventures begin.</p>
+  <div class="footer-links">
+    <a href="#">About</a>
+    <a href="#">Products</a>
+    <a href="#">Privacy</a>
+    <a href="#">Contact</a>
+  </div>
+  <p class="footer-copy">&copy; 2026 Eptus Studio. All rights reserved.</p>
+</footer>
+
+<script>
+// Waitlist form
+(function() {
+  var form = document.getElementById('waitlist-form');
+  var input = document.getElementById('email-input');
+  var btn = document.getElementById('submit-btn');
+  var success = document.getElementById('cta-success');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var email = input.value.trim();
+    if (!email || !email.includes('@')) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Joining...';
+
+    // Try Supabase first if configured
+    var sbUrl = 'SUPABASE_URL_PLACEHOLDER';
+    var sbKey = 'SUPABASE_ANON_KEY_PLACEHOLDER';
+    var ideaId = 'IDEA_ID_PLACEHOLDER';
+    var ideaName = 'IDEA_NAME_PLACEHOLDER';
+
+    if (sbUrl && sbUrl !== 'SUPABASE_URL_PLACEHOLDER' && window.supabase) {
+      var sb = window.supabase.createClient(sbUrl, sbKey);
+      sb.from('waitlist').insert({
+        email: email,
+        idea_id: ideaId,
+        idea_name: ideaName,
+        source: 'landing_page'
+      }).then(function() {
+        form.style.display = 'none';
+        success.style.display = 'block';
+      }).catch(function() {
+        form.style.display = 'none';
+        success.style.display = 'block';
+      });
+    } else {
+      // Fallback — just show success
+      setTimeout(function() {
+        form.style.display = 'none';
+        success.style.display = 'block';
+      }, 600);
+    }
+  });
+})();
+</script>
+</body>
+</html>
