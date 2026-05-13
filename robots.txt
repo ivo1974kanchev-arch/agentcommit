@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://agentcommit-4p5nv13tk-ivo1974kanchev-3737s-projects.vercel.app/sitemap.xml
